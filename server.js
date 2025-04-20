@@ -25,12 +25,13 @@ app.use(cookieParser());
 
 // Session for JWT + OAuth
 app.use(session({
+  name : "session_id",
   secret: process.env.SESSION_SECRET || 'your_default_secret',
   resave: false,
   saveUninitialized: true,
   cookie: {
     maxAge: 1000 * 60 * 60 * 24,
-    domain: 'carboncredits-backend.onrender.com',
+    domain: '.carboncredits-backend.onrender.com',
     httpOnly: true,
     sameSite: 'None',
     secure: true
