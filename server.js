@@ -31,7 +31,7 @@ app.use(session({
   saveUninitialized: true,
   cookie: {
     maxAge: 1000 * 60 * 60 * 24,
-    domain: '.carboncredits-backend.onrender.com',
+    // domain: 'carboncredits-backend.onrender.com',
     httpOnly: true,
     sameSite: 'None',
     secure: true
