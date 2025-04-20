@@ -151,8 +151,8 @@ router.get('/google/callback',
 
     res.cookie('token', token, {
       httpOnly: true,
-      sameSite: 'Lax',
-      secure: false,
+      sameSite: 'None',
+      secure: true,
     });
 
     const redirectUrl = `https://carboncredits-frontend-1.onrender.com/${user.role}/dashboard/`;

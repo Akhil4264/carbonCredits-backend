@@ -41,7 +41,7 @@ app.use((req, res, next) => {
   }
   next();
 });
-const tripRoutes = require('../routes/trip');
+const tripRoutes = require('../routes/Trip');
  // adjust path if needed
 app.use('/api/trip', tripRoutes);
 
