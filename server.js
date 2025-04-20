@@ -16,7 +16,7 @@ const app = express();
 
 // Middleware
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: 'https://carboncredits-frontend-1.onrender.com/',
   credentials: true,
 }));
 
@@ -53,10 +53,7 @@ const walletRoutes = require('./routes/wallet');
 app.use('/api/wallet', walletRoutes);
 
 // MongoDB connection
-mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-}).then(() => {
+mongoose.connect(process.env.MONGO_URI).then(() => {
   console.log('✅ Connected to MongoDB');
   app.listen(process.env.PORT || 5000, () => {
     console.log(`🚀 Server running on port ${process.env.PORT || 5000}`);
