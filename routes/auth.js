@@ -12,8 +12,46 @@ router.post('/register', async (req, res) => {
   try {
     const { fullName, email, password, role, employerName } = req.body;
 
+    const allowedRoles = ['employee', 'employer'];
+    const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
     if (!email || !password || !fullName || !role) {
       return res.status(400).json({ message: 'All fields are required.' });
+    }
+
+    if (!isValidEmail(email)) {
+      return res.status(400).json({ message: 'Invalid email format.' });
+    }
+
+    if (!allowedRoles.includes(role)) {
+      return res.status(400).json({ message: 'Invalid role specified.' });
+    }
+
+    if (password.length < 8) {
+      return res.status(400).json({ message: 'Password must be at least 8 characters long.' });
+    }
+
+    if (role === 'employee') {
+      if (!employerName) {
+        return res.status(400).json({ message: 'Employer name is required for employees.' });
+      }
+
+      const employerExists = await User.findOne({ fullName: employerName, role: 'employer' });
+      if (!employerExists) {
+        return res.status(404).json({ message: 'Specified employer does not exist.' });
+      }
+    }
+
+    if (role === 'employer') {
+      const employerNameExists = await User.findOne({ fullName, role: 'employer' });
+      if (employerNameExists) {
+        return res.status(409).json({ message: 'Employer name is already taken.' });
+      }
+    }
+
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(409).json({ message: 'Email is already registered.' });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -24,51 +62,19 @@ router.post('/register', async (req, res) => {
       password: hashedPassword,
       role,
       points: 0,
+      ...(role === 'employee' && { employerName })
     };
 
-    if (role === 'employee') {
-      if (!employerName) {
-        return res.status(400).json({ message: 'Employer name is required for employees.' });
-      }
-      userData.employerName = employerName;
-    }
+    await User.create(userData);
+    res.status(201).json({ message: 'User registered successfully' });
 
-    const existingUser = await User.findOne({ email });
-
-    if (existingUser) {
-      const Request = require('../models/Request');
-
-      // Delete their previous requests
-      await Request.deleteMany({ employeeId: existingUser._id });
-
-      // Reset points and update profile
-      await User.findByIdAndUpdate(existingUser._id, {
-        fullName,
-        password: hashedPassword,
-        role,
-        employerName: role === 'employee' ? employerName : undefined,
-        points: 0
-      });
-
-      return res.status(200).json({ message: 'Existing user replaced and data reset.' });
-    }
-
-    // If new user, create fresh
-    await User.create({
-      fullName,
-      email,
-      password: hashedPassword,
-      role,
-      employerName: role === 'employee' ? employerName : undefined,
-      points: 0
-    });
-
-    res.status(201).json({ message: 'User registered or updated successfully' });
   } catch (err) {
     console.error('Registration error:', err);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: 'Internal server error. Please try again later.' });
   }
 });
+
+
 
 // ✅ JWT Login
 router.post('/login', async (req, res) => {
