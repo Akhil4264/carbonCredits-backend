@@ -25,7 +25,6 @@ app.use(cookieParser());
 
 // Session for JWT + OAuth
 app.use(session({
-  name : "session_id",
   secret: process.env.SESSION_SECRET || 'your_default_secret',
   resave: false,
   saveUninitialized: true,
