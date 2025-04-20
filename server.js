@@ -16,7 +16,7 @@ const app = express();
 
 // Middleware
 app.use(cors({
-  origin: 'https://carboncredits-frontend-1.onrender.com/',
+  origin: 'https://carboncredits-frontend-1.onrender.com',
   credentials: true,
 }));
 
