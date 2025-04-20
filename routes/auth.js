@@ -90,7 +90,6 @@ router.post('/login', async (req, res) => {
     });
 
     res.cookie('token', token, {
-      domain : '.carboncredits-backend.onrender.com',
       httpOnly: true,
       sameSite: 'None',
       secure: true,
@@ -155,7 +154,6 @@ router.get('/google/callback',
     });
 
     res.cookie('token', token, {
-      domain : 'carboncredits-backend.onrender.com',
       httpOnly: true,
       sameSite: 'None',
       secure: true,
