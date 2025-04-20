@@ -74,8 +74,6 @@ router.post('/register', async (req, res) => {
   }
 });
 
-
-
 // ✅ JWT Login
 router.post('/login', async (req, res) => {
   try {
@@ -106,7 +104,7 @@ router.post('/login', async (req, res) => {
 });
 
 // ✅ Get Authenticated User (for frontend dashboard)
-router.get('/me', auth, async (req, res) => {
+router.post('/token/me', auth, async (req, res) => {
   const user = await User.findById(req.user.id).select('-password');
   res.json(user);
 });
