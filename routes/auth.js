@@ -142,7 +142,7 @@ router.get('/google/callback',
     const { profile, user } = req.user;
 
     if (!user) {
-      return res.redirect(`http://localhost:3000?error=notregistered&email=${profile.emails[0].value}`);
+      return res.redirect(`https://carboncredits-frontend-1.onrender.com?error=notregistered&email=${profile.emails[0].value}`);
     }
 
     const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, {
@@ -155,7 +155,7 @@ router.get('/google/callback',
       secure: false,
     });
 
-    const redirectUrl = `http://localhost:3000/${user.role}/dashboard/`;
+    const redirectUrl = `https://carboncredits-frontend-1.onrender.com/${user.role}/dashboard/`;
     res.redirect(redirectUrl);
   }
 );
